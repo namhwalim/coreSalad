@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
+<div class="container">
+    <div id="map" style="width:500px;height:400px;"></div>
+	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a2d7c5790f59493d0a7d02f5675b3dfc"></script>
+	<script>
+		var container = document.getElementById('map');
+		var options = {
+			center: new kakao.maps.LatLng(33.450701, 126.570667),
+			level: 3
+		};
+
+		var map = new kakao.maps.Map(container, options);
+	</script>
+	<a href="https://map.kakao.com/link/to/18577297" class="btn">근처 샐러드 검색</a>
+	<!-- services 라이브러리 불러오기 -->
+<script type="text/javascript" src="https://map.kakao.com/link/search/카카오"></script>
+	</div>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>board</title>
+	<link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+    <div class="container">
+    <div id="map" style="width:200px;height:100px;"></div>
+	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a2d7c5790f59493d0a7d02f5675b3dfc"></script>
+	<script>
+		var container = document.getElementById('map');
+		var options = {
+			center: new kakao.maps.LatLng(33.450701, 126.570667),
+			level: 3
+		};
+
+		var map = new kakao.maps.Map(container, options);
+	</script>
+    	<h2>게시글 목록</h2>
+    	<table class="board_list">
+	        <colgroup>
+	            <col width="15%"/>
+	            <col width="*"/>
+	            <col width="15%"/>
+	            <col width="20%"/>
+	        </colgroup>
+	        <thead>
+	            <tr>
+	                <th scope="col">글번호</th>
+	                <th scope="col">제목</th>
+	                <th scope="col">조회수</th>
+	                <th scope="col">작성일</th>
+	            </tr>
+	        </thead>
+	        <tbody>
+	        	<tr th:if="${#lists.size(list)} > 0" th:each="list : ${list}">
+	        		<td th:text="${list.board_idx}"></td>
+	        		<td class="title"><a href="/board/openBoardDetail.do?board_idx=" th:attrappend="href=${list.board_idx}" th:text="${list.title}"></a></td>
+	        		<td th:text="${list.hit_cnt}"></td>
+	        		<td th:text="${list.created_datetime}"></td>
+	        	</tr> 
+	        	<tr th:unless="${#lists.size(list)} > 0">
+	        		<td colspan="4">조회된 결과가 없습니다.</td>
+	        	</tr>
+	        </tbody>
+	    </table>
+	    <a href="/board/openBoardWrite.do" class="btn">글 쓰기</a>
+	    <a href="/board/saladFind.do" class="btn">근처 샐러드 검색</a>
+    </div>
+</body>
+</html>
