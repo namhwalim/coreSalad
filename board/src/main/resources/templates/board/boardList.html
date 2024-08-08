@@ -1,53 +1,161 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko">
 <head>
-	<meta charset="UTF-8">
-	<title>board</title>
-	<link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salad Search</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        .top-bar {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .top-bar input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            font-size: 16px;
+        }
+
+        .container {
+            display: flex;
+            height: calc(100% - 50px); /* Adjust based on the top-bar height */
+        }
+
+        .map-area {
+            flex: 2;
+            position: relative;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .details-area {
+            flex: 1;
+            background-color: #f4f4f9;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .salad-place {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .salad-place h2 {
+            margin-top: 0;
+        }
+
+        .salad-menu {
+            margin-top: 15px;
+        }
+
+        .salad-menu-item {
+            padding: 10px;
+            background: #fff;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-    <div id="map" style="width:200px;height:100px;"></div>
-	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a2d7c5790f59493d0a7d02f5675b3dfc"></script>
-	<script>
-		var container = document.getElementById('map');
-		var options = {
-			center: new kakao.maps.LatLng(33.450701, 126.570667),
-			level: 3
-		};
-
-		var map = new kakao.maps.Map(container, options);
-	</script>
-    	<h2>게시글 목록</h2>
-    	<table class="board_list">
-	        <colgroup>
-	            <col width="15%"/>
-	            <col width="*"/>
-	            <col width="15%"/>
-	            <col width="20%"/>
-	        </colgroup>
-	        <thead>
-	            <tr>
-	                <th scope="col">글번호1</th>
-	                <th scope="col">제목</th>
-	                <th scope="col">조회수</th>
-	                <th scope="col">작성일</th>
-	            </tr>
-	        </thead>
-	        <tbody>
-	        	<tr th:if="${#lists.size(list)} > 0" th:each="list : ${list}">
-	        		<td th:text="${list.board_idx}"></td>
-	        		<td class="title"><a href="/board/openBoardDetail.do?board_idx=" th:attrappend="href=${list.board_idx}" th:text="${list.title}"></a></td>
-	        		<td th:text="${list.hit_cnt}"></td>
-	        		<td th:text="${list.created_datetime}"></td>
-	        	</tr> 
-	        	<tr th:unless="${#lists.size(list)} > 0">
-	        		<td colspan="4">조회된 결과가 없습니다1</td>
-	        	</tr>
-	        </tbody>
-	    </table>
-	    <a href="/board/openBoardWrite.do" class="btn">글쓰기</a>
-	    <a href="/board/saladFind.do" class="btn">근처 샐러드 검색</a>
+    <div class="top-bar">
+        <input type="text" placeholder="Search for salads...">
     </div>
+    <div class="container">
+        <div class="map-area">
+            <div id="map"></div>
+        </div>
+        <div class="details-area">
+            <div class="salad-place">
+                <h2>Salad Place Name</h2>
+                <div>Address: Some Location</div>
+                <div>Rating: 4.5 ★</div>
+                <p>Description...</p>
+                <div class="salad-menu">
+                    <div class="salad-menu-item">
+                        <strong>Menu Item 1</strong><br>
+                        <span>Description of menu item 1.</span><br>
+                        <span>Price: $10</span>
+                    </div>
+                    <div class="salad-menu-item">
+                        <strong>Menu Item 2</strong><br>
+                        <span>Description of menu item 2.</span><br>
+                        <span>Price: $12</span>
+                    </div>
+                    <!-- More menu items can be added here -->
+                </div>
+            </div>
+            <!-- More salad places can be added similarly -->
+        </div>
+    </div>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([37.4979, 127.0276], 13); // 서울 강남의 좌표
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        var locations = [
+            { lat: 37.4979, lng: 127.0276, name: "Salad Place 1", address: "123 Salad Street, Gangnam, Seoul", rating: "4.5" },
+            { lat: 37.4989, lng: 127.0286, name: "Salad Place 2", address: "456 Lettuce Lane, Gangnam, Seoul", rating: "4.2" }
+        ];
+
+        var menus = {
+            "Salad Place 1": [
+                { name: "Caesar Salad", description: "Crisp romaine lettuce with Caesar dressing", price: "$10" },
+                { name: "Greek Salad", description: "Fresh vegetables with feta cheese", price: "$12" }
+            ],
+            "Salad Place 2": [
+                { name: "Chicken Salad", description: "Grilled chicken with mixed greens", price: "$11" },
+                { name: "Tuna Salad", description: "Tuna with fresh vegetables", price: "$13" }
+            ]
+        };
+
+        locations.forEach(function(location) {
+            var marker = L.marker([location.lat, location.lng]).addTo(map)
+                .bindPopup(`<b>${location.name}</b><br>${location.address}<br>Rating: ${location.rating} ★`)
+                .on('click', function() {
+                    var menuHtml = menus[location.name].map(function(menuItem) {
+                        return `
+                            <div class="salad-menu-item">
+                                <strong>${menuItem.name}</strong><br>
+                                <span>${menuItem.description}</span><br>
+                                <span>Price: ${menuItem.price}</span>
+                            </div>
+                        `;
+                    }).join('');
+
+                    document.querySelector(".details-area").innerHTML = `
+                        <div class="salad-place">
+                            <h2>${location.name}</h2>
+                            <div>Address: ${location.address}</div>
+                            <div>Rating: ${location.rating} ★</div>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                            <div class="salad-menu">${menuHtml}</div>
+                        </div>
+                    `;
+                });
+        });
+    </script>
 </body>
 </html>
