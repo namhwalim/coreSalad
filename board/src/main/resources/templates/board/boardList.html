@@ -3,159 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Salad Search</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <title>Document</title>
     <style>
-        body, html {
+        /* 필요한 스타일이 있다면 여기에 추가하세요 */
+        body {
             margin: 0;
             padding: 0;
-            height: 100%;
-            font-family: Arial, sans-serif;
-        }
-
-        .top-bar {
-            background-color: #333;
-            color: white;
-            padding: 10px;
-            text-align: center;
-        }
-
-        .top-bar input[type="text"] {
-            width: 80%;
-            padding: 10px;
-            border-radius: 5px;
-            border: none;
-            font-size: 16px;
-        }
-
-        .container {
-            display: flex;
-            height: calc(100% - 50px); /* Adjust based on the top-bar height */
-        }
-
-        .map-area {
-            flex: 2;
-            position: relative;
-        }
-
-        #map {
-            width: 100%;
-            height: 100%;
-        }
-
-        .details-area {
-            flex: 1;
-            background-color: #f4f4f9;
-            padding: 20px;
-            overflow-y: auto;
-            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .salad-place {
-            margin-bottom: 20px;
-            padding: 15px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .salad-place h2 {
-            margin-top: 0;
-        }
-
-        .salad-menu {
-            margin-top: 15px;
-        }
-
-        .salad-menu-item {
-            padding: 10px;
-            background: #fff;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
 <body>
-    <div class="top-bar">
-        <input type="text" placeholder="Search for salads...">
-    </div>
-    <div class="container">
-        <div class="map-area">
-            <div id="map"></div>
-        </div>
-        <div class="details-area">
-            <div class="salad-place">
-                <h2>Salad Place Name</h2>
-                <div>Address: Some Location</div>
-                <div>Rating: 4.5 ★</div>
-                <p>Description...</p>
-                <div class="salad-menu">
-                    <div class="salad-menu-item">
-                        <strong>Menu Item 1</strong><br>
-                        <span>Description of menu item 1.</span><br>
-                        <span>Price: $10</span>
-                    </div>
-                    <div class="salad-menu-item">
-                        <strong>Menu Item 2</strong><br>
-                        <span>Description of menu item 2.</span><br>
-                        <span>Price: $12</span>
-                    </div>
-                    <!-- More menu items can be added here -->
-                </div>
+    <div style="width: 1440px; height: 1024px; position: relative; background: white">
+        <div style="width: 1453px; height: 144px; left: -13px; top: 0px; position: absolute; background: #67C582"></div>
+        <div style="width: 254px; height: 103px; left: 520px; top: 41px; position: absolute; color: black; font-size: 48px; font-family: Inter; font-weight: 400; word-wrap: break-word">A</div>
+        <div style="width: 254px; height: 103px; left: 862px; top: 41px; position: absolute; color: black; font-size: 48px; font-family: Inter; font-weight: 400; word-wrap: break-word">B</div>
+        <div style="width: 254px; height: 103px; left: 1204px; top: 41px; position: absolute; color: black; font-size: 48px; font-family: Inter; font-weight: 400; word-wrap: break-word">C</div>
+        <div style="width: 734px; height: 70px; left: 353px; top: 212px; position: absolute">
+            <div style="width: 734px; height: 70px; left: 0px; top: 0px; position: absolute; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 30px; border: 2px #67C582 solid"></div>
+            <div style="width: 40px; height: 43px; left: 652px; top: 13px; position: absolute">
+                <div style="width: 10px; height: 10.75px; left: 30px; top: 32.25px; position: absolute; border: 5px black solid"></div>
+                <div style="width: 34.29px; height: 36.86px; left: 0px; top: 0px; position: absolute; border: 5px black solid"></div>
             </div>
-            <!-- More salad places can be added similarly -->
         </div>
+        <div style="width: 279px; height: 438px; left: 300px; top: 563px; position: absolute; background: #D9D9D9"></div>
+        <div style="width: 30px; height: 30px; left: 313px; top: 852px; position: absolute; background: #FFAC33"></div>
+        <img style="width: 279px; height: 279px; left: 300px; top: 563px; position: absolute; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25) inset" src="https://via.placeholder.com/279x279" />
+        <img style="width: 1389px; height: 953px; left: 19px; top: 144px; position: absolute" src="https://via.placeholder.com/1389x953" />
     </div>
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script>
-        var map = L.map('map').setView([37.4979, 127.0276], 13); // 서울 강남의 좌표
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
-
-        var locations = [
-            { lat: 37.4979, lng: 127.0276, name: "Salad Place 1", address: "123 Salad Street, Gangnam, Seoul", rating: "4.5" },
-            { lat: 37.4989, lng: 127.0286, name: "Salad Place 2", address: "456 Lettuce Lane, Gangnam, Seoul", rating: "4.2" }
-        ];
-
-        var menus = {
-            "Salad Place 1": [
-                { name: "Caesar Salad", description: "Crisp romaine lettuce with Caesar dressing", price: "$10" },
-                { name: "Greek Salad", description: "Fresh vegetables with feta cheese", price: "$12" }
-            ],
-            "Salad Place 2": [
-                { name: "Chicken Salad", description: "Grilled chicken with mixed greens", price: "$11" },
-                { name: "Tuna Salad", description: "Tuna with fresh vegetables", price: "$13" }
-            ]
-        };
-
-        locations.forEach(function(location) {
-            var marker = L.marker([location.lat, location.lng]).addTo(map)
-                .bindPopup(`<b>${location.name}</b><br>${location.address}<br>Rating: ${location.rating} ★`)
-                .on('click', function() {
-                    var menuHtml = menus[location.name].map(function(menuItem) {
-                        return `
-                            <div class="salad-menu-item">
-                                <strong>${menuItem.name}</strong><br>
-                                <span>${menuItem.description}</span><br>
-                                <span>Price: ${menuItem.price}</span>
-                            </div>
-                        `;
-                    }).join('');
-
-                    document.querySelector(".details-area").innerHTML = `
-                        <div class="salad-place">
-                            <h2>${location.name}</h2>
-                            <div>Address: ${location.address}</div>
-                            <div>Rating: ${location.rating} ★</div>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                            <div class="salad-menu">${menuHtml}</div>
-                        </div>
-                    `;
-                });
-        });
-    </script>
+    <img style="width: 232px; height: 143px" src="https://via.placeholder.com/232x143" />
+    <div style="width: 1374px; height: 2552px; position: relative; background: white">
+        <img style="width: 1389px; height: 953px; left: 0px; top: 0px; position: absolute" src="https://via.placeholder.com/1389x953" />
+        <div style="width: 1389px; height: 1070px; left: 0px; top: 953px; position: absolute; background: #F5F5F5; border: 1px black solid"></div>
+        <div style="width: 279px; height: 298px; left: 56px; top: 1249px; position: absolute; background: #F5F5F5; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border: 1px #157330 solid"></div>
+        <div style="width: 1313px; height: 273px; left: 48px; top: 958px; position: absolute; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border: 1px #157330 solid"></div>
+        <div style="width: 279px; height: 298px; left: 396px; top: 1249px; position: absolute; background: #F5F5F5; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border: 1px #157330 solid"></div>
+        <div style="width: 279px; height: 298px; left: 737px; top: 1249px; position: absolute; background: #F5F5F5; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border: 1px #157330 solid"></div>
+        <div style="width: 279px; height: 298px; left: 1077px; top: 1249px; position: absolute; background: #F5F5F5; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border: 1px #157330 solid"></div>
+        <div style="width: 283px; height: 202px; left: 585px; top: 23px; position: absolute; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25)"></div>
+        <img style="width: 216px; height: 154px; left: -8px; top: -23px; position: absolute" src="https://via.placeholder.com/216x154" />
+        <img style="width: 258px; height: 254px; left: 66px; top: 1230px; position: absolute" src="https://via.placeholder.com/258x254" />
+        <img style="width: 258px; height: 254px; left: 407px; top: 1229px; position: absolute" src="https://via.placeholder.com/258x254" />
+        <img style="width: 258px; height: 254px; left: 743px; top: 1230px; position: absolute" src="https://via.placeholder.com/258x254" />
+        <img style="width: 258px; height: 254px; left: 1094px; top: 1238px; position: absolute" src="https://via.placeholder.com/258x254" />
+        <div style="width: 262px; height: 60px; left: 67px; top: 983px; position: absolute; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25) inset; border: 1px #157330 solid"></div>
+        <div style="width: 243px; height: 62px; left: 104px; top: 996px; position: absolute; color: black; font-size: 24px; font-family: Inter; font-weight: 400; word-wrap: break-word">샐러디 강남역점</div>
+        <div style="width: 243px; height: 62px; left: 108px; top: 1461px; position: absolute; color: black; font-size: 24px; font-family: Inter; font-weight: 400; word-wrap: break-word">우삼겹메밀면 샐러디</div>
+        <div style="width: 279px; height: 298px; left: 56px; top: 1589px; position: absolute; background: #F5F5F5; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border: 1px #157330 solid"></div>
+        <div style="width: 279px; height: 298px; left: 396px; top: 1589px; position: absolute; background: #F5F5F5; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border: 1px #157330 solid"></div>
+        <div style="width: 279px; height: 298px; left: 737px; top: 1589px; position: absolute; background: #F5F5F5; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border: 1px #157330 solid"></div>
+        <div style="width: 279px; height: 298px; left: 1077px; top: 1589px; position: absolute; background: #F5F5F5; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border: 1px #157330 solid"></div>
+        <img style="width: 258px; height: 254px; left: 66px; top: 1570px; position: absolute" src="https://via.placeholder.com/258x254" />
+        <img style="width: 258px; height: 254px; left: 407px; top: 1569px; position: absolute" src="https://via.placeholder.com/258x254" />
+        <img style="width: 258px; height: 254px; left: 743px; top: 1570px; position: absolute" src="https://via.placeholder.com/258x254" />
+        <img style="width: 258px; height: 254px; left: 1094px; top: 1578px; position: absolute" src="https://via.placeholder.com/258x254" />
+        <div style="width: 243px; height: 62px; left: 108px; top: 1801px; position: absolute; color: black; font-size: 24px; font-family: Inter; font-weight: 400; word-wrap: break-word">우삼겹메밀면 샐러디</div>
+        <div style="width: 734px; height: 69.55px; left: 185px; top: 54px; position: absolute">
+            <div style="width: 734px; height: 69.55px; left: 0px; top: 0px; position: absolute; background: #FFFEFE; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 30px; border: 5px #67C582 solid"></div>
+            <div style="width: 28px; height: 31px; left: 669px; top: 19px; position: absolute">
+                <div style="width: 7px; height: 7.75px; left: 21px; top: 23.25px; position: absolute; background: #FFFEFE; border: 5px black solid"></div>
+                <div style="width: 24px; height: 26.57px; left: 0px; top: 0px; position: absolute; background: #FFFEFE; border: 5px black solid"></div>
+            </div>
+        </div>
+        <div style="width: 21px; height: 27.12px; left: 56px; top: 1073px; position: absolute">
+            <div style="width: 7.73px; height: 7.42px; left: 6.64px; top: 6.38px; position: absolute; background: black"></div>
+            <div style="width: 21px; height: 27.12px; left: 0px; top: 0px; position: absolute; background: black"></div>
+        </div>
+        <div style="left: 86px; top: 1079px; position: absolute; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">서울특별시 강남구 역삼동 강남대로84길 23 1층</div>
+        <div style="width: 21px; height: 27px; left: 54.45px; top: 1106.24px; position: absolute">
+            <div style="width: 5.66px; height: 13.11px; left: 9.78px; top: 4.47px; position: absolute; background: black"></div>
+            <div style="width: 21px; height: 27px; left: 0px; top: 0px; position: absolute; background: black"></div>
+        </div>
+        <div style="width: 20.55px; height: 18.32px; left: 58.45px; top: 1146.68px; position: absolute; background: #292D32"></div>
+        <div style="left: 86px; top: 1112px; position: absolute; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">수요일 오전 11:00~오후 9:00</div>
+        <div style="left: 93px; top: 1151px; position: absolute; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">010-1111-2222</div>
+    </div>
+    <div style="width: 1440px; height: 1024px; padding-top: 110px; padding-bottom: 225px; padding-left: 223px; padding-right: 185px; background: white; justify-content: flex-end; align-items: center; display: inline-flex">
+        <img style="width: 1032px; height: 689px" src="https://via.placeholder.com/1032x689" />
+    </div>
+    <img style="width: 67px; height: 94px; transform: rotate(90deg); transform-origin: 0 0" src="https://via.placeholder.com/67x94" />
+    <div style="width: 47px; height: 72px; position: relative; transform: rotate(-90deg); transform-origin: 0 0">
+        <div style="width: 47px; height: 72px; left: 0px; top: 0px; position: absolute; transform: rotate(-90deg); transform-origin: 0 0; background: white; border: 2px black solid"></div>
+        <div style="width: 15.72px; height: 42px; left: 15px; top: -10.76px; position: absolute; transform: rotate(-90deg); transform-origin: 0 0; background: white; border: 2px black solid"></div>
+        <div style="width: 15.72px; height: 42px; left: 15px; top: -22.51px; position: absolute; transform: rotate(-90deg); transform-origin: 0 0; background: white; border: 2px black solid"></div>
+    </div>
 </body>
 </html>
