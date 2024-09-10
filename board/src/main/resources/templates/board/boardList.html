@@ -113,7 +113,6 @@
         <!-- 메뉴 이미지 표시 영역 -->
         <div class="menu-container">
             <div class="menu-item">
-                <!-- 이미지가 없는 경우에도 네모가 보이도록 함 -->
                 <img src="https://via.placeholder.com/300x200" alt="메뉴 이미지 1">
                 <p>메뉴 이름 1</p>
             </div>
@@ -156,44 +155,45 @@
 
         // 현재 위치를 기반으로 지도를 초기화하는 함수
         function initMap() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                var lat = position.coords.latitude;
-                var lon = position.coords.longitude;
-                currentLocation = new kakao.maps.LatLng(lat, lon);
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var lat = position.coords.latitude;
+                    var lon = position.coords.longitude;
+                    currentLocation = new kakao.maps.LatLng(lat, lon);
 
-                var container = document.getElementById('map');
-                var options = {
-                    center: currentLocation,
-                    level: 3
-                };
-                map = new kakao.maps.Map(container, options);
+                    var container = document.getElementById('map');
+                    var options = {
+                        center: currentLocation,
+                        level: 3
+                    };
+                    map = new kakao.maps.Map(container, options);
 
-                // 장소 검색 객체 생성
-                ps = new kakao.maps.services.Places(map);
+                    // 장소 검색 객체 생성
+                    ps = new kakao.maps.services.Places(map);
 
-                // 현재 위치에 마커 추가
-                var marker = new kakao.maps.Marker({
-                    position: currentLocation,
-                    map: map
+                    // 현재 위치에 마커 추가
+                    var marker = new kakao.maps.Marker({
+                        position: currentLocation,
+                        map: map
+                    });
+
+                    // 현재 위치를 지도 중심으로 설정
+                    map.setCenter(currentLocation);
+                }, function(error) {
+                    alert('위치 정보를 사용할 수 없습니다.');
                 });
+            } else {
+                alert('브라우저가 위치 정보를 지원하지 않습니다.');
+            }
 
-                // 현재 위치를 지도 중심으로 설정
-                map.setCenter(currentLocation);
-            }, function(error) {
-                alert('위치 정보를 사용할 수 없습니다.');
+            // 검색창에서 엔터키 이벤트 추가
+            document.getElementById('search-input').addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    searchPlaces();
+                }
             });
-        } else {
-            alert('브라우저가 위치 정보를 지원하지 않습니다.');
         }
 
-        // 검색창에서 엔터키 이벤트 추가
-        document.getElementById('search-input').addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                searchPlaces();
-            }
-        });
-    }
         // 현위치로 버튼 클릭 시 현재 위치로 이동하는 함수
         function moveToCurrentLocation() {
             if (currentLocation) {
@@ -209,14 +209,21 @@
             }
         }
 
-        // 장소 검색 요청 함수
+        // 장소 검색 요청 함수 (반경 1km 내에서 검색)
         function searchPlaces() {
             var keyword = document.getElementById('search-input').value;
             if (!keyword.trim()) {
                 alert('검색어를 입력해주세요!');
                 return;
             }
-            ps.keywordSearch(keyword, placesSearchCB); 
+
+            // 반경 1km 내에서 검색하는 옵션 설정
+            var searchOptions = {
+                location: currentLocation, // 현재 위치 기준
+                radius: 1000 // 반경 1000미터 (1km)
+            };
+
+            ps.keywordSearch(keyword, placesSearchCB, searchOptions); 
         }
 
         // 장소 검색 콜백 함수
@@ -236,11 +243,19 @@
             }
         }
 
-        // 마커 표시 함수
+     // 마커 표시 함수
         function displayMarker(place) {
+			var imageSrc = '/images/marker.png', // 마커이미지의 주소입니다    
+			    imageSize = new kakao.maps.Size(60, 45), // 마커이미지의 크기입니다
+			    imageOption = {offset: new kakao.maps.Point(17, 40)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+
+			// 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+			var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+				
             var marker = new kakao.maps.Marker({
                 map: map,
-                position: new kakao.maps.LatLng(place.y, place.x) 
+                position: new kakao.maps.LatLng(place.y, place.x), 
+				image: markerImage
             });
 
             kakao.maps.event.addListener(marker, 'click', function() {
