@@ -75,22 +75,8 @@
             font-size: 16px;
             font-weight: bold;
         }
-        #current-location-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            padding: 10px;
-            background-color: #157330;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            width: 50px;
-            height: 50px; 
-            font-size: 16px;
-            text-align: center;
-            line-height: 30px;
-        }
+        
+
     </style>
     <!-- Kakao Maps API 스크립트 추가 -->
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a2d7c5790f59493d0a7d02f5675b3dfc&libraries=services"></script>
@@ -103,13 +89,14 @@
             <button onclick="searchPlaces()">Search</button>
         </div>
     </div>
-    <div style="width: 100%; background: white">
+    <div style="position: relative; width: 100%; background: white;">
         <!-- 지도 표시 영역 -->
-        <div id="map"></div>
+    	<div id="map" style="position: relative;"></div>
         <!-- 장소 정보 표시 영역 -->
         <div id="place-info"></div>
         <!-- 현위치 버튼 -->
-        <button id="current-location-btn" onclick="moveToCurrentLocation()">현</button>
+    <img src="/images/currentLocation.png" alt="현 위치 버튼" style="width: 50px; height: 50px; position: absolute; top: 540px; right: 20px; z-index: 10;  cursor: pointer;" onclick="moveToCurrentLocation()" />
+</div>
         <!-- 메뉴 이미지 표시 영역 -->
         <div class="menu-container">
             <div class="menu-item">
