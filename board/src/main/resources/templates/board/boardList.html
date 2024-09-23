@@ -75,8 +75,21 @@
             font-size: 16px;
             font-weight: bold;
         }
-        
 
+        /* '현 지도에서 검색' 버튼 CSS */
+        #search-map-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #157330;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            z-index: 10;
+            border-radius: 5px;
+        }
     </style>
     <!-- Kakao Maps API 스크립트 추가 -->
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a2d7c5790f59493d0a7d02f5675b3dfc&libraries=services"></script>
@@ -95,42 +108,44 @@
         <!-- 장소 정보 표시 영역 -->
         <div id="place-info"></div>
         <!-- 현위치 버튼 -->
-    <img src="/images/currentLocation.png" alt="현 위치 버튼" style="width: 50px; height: 50px; position: absolute; top: 540px; right: 20px; z-index: 10;  cursor: pointer;" onclick="moveToCurrentLocation()" />
-</div>
-        <!-- 메뉴 이미지 표시 영역 -->
-        <div class="menu-container">
-            <div class="menu-item">
-                <img src="https://via.placeholder.com/300x200" alt="메뉴 이미지 1">
-                <p>메뉴 이름 1</p>
-            </div>
-            <div class="menu-item">
-                <img src="https://via.placeholder.com/300x200" alt="메뉴 이미지 2">
-                <p>메뉴 이름 2 </p>
-            </div>
-            <div class="menu-item">
-                <img src="https://via.placeholder.com/300x200" alt="메뉴 이미지 3">
-                <p>메뉴 이름 3</p>
-            </div>
-            <div class="menu-item">
-                <img src="https://via.placeholder.com/300x200" alt="메뉴 이미지 4">
-                <p>메뉴 이름 4</p>
-            </div>
-            <div class="menu-item">
-                <img src="https://via.placeholder.com/300x200" alt="메뉴 이미지 5">
-                <p>메뉴 이름 5</p>
-            </div>
-            <div class="menu-item">
-                <img src="https://via.placeholder.com/300x200" alt="메뉴 이미지 6">
-                <p>메뉴 이름 6</p>
-            </div>
-            <div class="menu-item">
-                <img src="https://via.placeholder.com/300x200" alt="메뉴 이미지 7">
-                <p>메뉴 이름 7</p>
-            </div>
-            <div class="menu-item">
-                <img src="https://via.placeholder.com/300x200" alt="메뉴 이미지 8">
-                <p>메뉴 이름 8</p>
-            </div>
+        <img src="/images/currentLocation.png" alt="현 위치 버튼" style="width: 50px; height: 50px; position: absolute; top: 540px; right: 20px; z-index: 10; cursor: pointer;" onclick="moveToCurrentLocation()" />
+
+        <!-- 현 지도에서 검색 버튼 추가 -->
+        <button id="search-map-btn" onclick="searchCurrentMap()">현 지도에서 검색</button>
+    </div>
+    <!-- 메뉴 이미지 표시 영역 -->
+    <div class="menu-container">
+        <div class="menu-item">
+            <img src="https://via.placeholder.com/300x200" alt="메뉴 이미지 1">
+            <p>메뉴 이름 1</p>
+        </div>
+        <div class="menu-item">
+            <img src="https://via.placeholder.com/300x200" alt="메뉴 이미지 2">
+            <p>메뉴 이름 2 </p>
+        </div>
+        <div class="menu-item">
+            <img src="https://via.placeholder.com/300x200" alt="메뉴 이미지 3">
+            <p>메뉴 이름 3</p>
+        </div>
+        <div class="menu-item">
+            <img src="https://via.placeholder.com/300x200" alt="메뉴 이미지 4">
+            <p>메뉴 이름 4</p>
+        </div>
+        <div class="menu-item">
+            <img src="https://via.placeholder.com/300x200" alt="메뉴 이미지 5">
+            <p>메뉴 이름 5</p>
+        </div>
+        <div class="menu-item">
+            <img src="https://via.placeholder.com/300x200" alt="메뉴 이미지 6">
+            <p>메뉴 이름 6</p>
+        </div>
+        <div class="menu-item">
+            <img src="https://via.placeholder.com/300x200" alt="메뉴 이미지 7">
+            <p>메뉴 이름 7</p>
+        </div>
+        <div class="menu-item">
+            <img src="https://via.placeholder.com/300x200" alt="메뉴 이미지 8">
+            <p>메뉴 이름 8</p>
         </div>
     </div>
 
@@ -204,13 +219,30 @@
                 return;
             }
 
-            /*// 반경 1km 내에서 검색하는 옵션 설정
-            var searchOptions = {
-                location: currentLocation, // 현재 위치 기준
-                radius: 1000 // 반경 1000미터 (1km)
-            };*/
-
             ps.keywordSearch(keyword, placesSearchCB); 
+        }
+
+        // '현 지도에서 검색' 버튼 클릭 시, 현재 지도 중심에서 "샐러드"와 "포케"를 검색하는 함수
+        function searchCurrentMap() {
+            var keyword = "샐러드 포케";
+            var bounds = map.getBounds(); // 현재 지도 범위 가져오기
+
+            ps.keywordSearch(keyword, function(data, status, pagination) {
+                if (status === kakao.maps.services.Status.OK) {
+                    clearMarkers();
+                    for (var i = 0; i < data.length; i++) {
+                        displayMarker(data[i]);
+                    }
+                    // 첫 번째 검색 결과를 기준으로 지도 중심 이동
+                    map.setCenter(new kakao.maps.LatLng(data[0].y, data[0].x));
+                } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+                    alert('검색 결과가 없습니다.');
+                } else if (status === kakao.maps.services.Status.ERROR) {
+                    alert('검색 중 오류가 발생했습니다.');
+                }
+            }, {
+                bounds: bounds // 검색할 범위를 현재 지도 범위로 제한
+            });
         }
 
         // 장소 검색 콜백 함수
@@ -230,19 +262,11 @@
             }
         }
 
-     // 마커 표시 함수
+        // 마커 표시 함수
         function displayMarker(place) {
-			var imageSrc = '/images/marker.png', // 마커이미지의 주소입니다    
-			    imageSize = new kakao.maps.Size(60, 45), // 마커이미지의 크기입니다
-			    imageOption = {offset: new kakao.maps.Point(17, 40)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-
-			// 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
-			var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
-				
             var marker = new kakao.maps.Marker({
                 map: map,
-                position: new kakao.maps.LatLng(place.y, place.x), 
-				image: markerImage
+                position: new kakao.maps.LatLng(place.y, place.x)
             });
 
             kakao.maps.event.addListener(marker, 'click', function() {
