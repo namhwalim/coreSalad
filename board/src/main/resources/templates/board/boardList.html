@@ -222,28 +222,53 @@
             ps.keywordSearch(keyword, placesSearchCB); 
         }
 
-        // '현 지도에서 검색' 버튼 클릭 시, 현재 지도 중심에서 "샐러드"와 "포케"를 검색하는 함수
+     // '현 지도에서 검색' 버튼 클릭 시, 현재 지도 중심에서 반경 3km 내 "샐러드"와 "포케"를 검색하는 함수
         function searchCurrentMap() {
-            var keyword = "샐러드 포케";
-            var bounds = map.getBounds(); // 현재 지도 범위 가져오기
+        	var keywords = ["샐러드", "포케", "뚜레쥬르"]; // 검색할 키워드 배열
+            var center = map.getCenter(); // 현재 지도 중심 좌표 가져오기
+            var allPlaces = []; // 샐러드와 포케 가게 모두 저장할 배열
 
-            ps.keywordSearch(keyword, function(data, status, pagination) {
-                if (status === kakao.maps.services.Status.OK) {
+            // 키워드 검색 함수
+            function searchByKeyword(keyword) {
+                return new Promise(function(resolve, reject) {
+                    ps.keywordSearch(keyword, function(data, status, pagination) {
+                        if (status === kakao.maps.services.Status.OK) {
+                            resolve(data); // 검색 성공 시, 데이터를 반환
+                        } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+                            alert(keyword + ' 검색 결과가 없습니다.');
+                            resolve([]); // 검색 결과가 없는 경우 빈 배열 반환
+                        } else if (status === kakao.maps.services.Status.ERROR) {
+                            reject('검색 중 오류가 발생했습니다: ' + keyword);
+                        }
+                    }, {
+                        location: center, // 검색 기준 좌표 설정
+                        radius: 3000 // 반경 3km로 설정
+                    });
+                });
+            }
+
+            // 두 개의 키워드로 검색 후, 결과를 지도에 표시
+            Promise.all(keywords.map(searchByKeyword))
+                .then(function(results) {
+                    // 검색된 결과를 통합 (샐러드와 포케 모두 포함)
+                    allPlaces = results.flat();
+
+                    // 지도에 마커로 표시
                     clearMarkers();
-                    for (var i = 0; i < data.length; i++) {
-                        displayMarker(data[i]);
+                    allPlaces.forEach(function(place) {
+                        displayMarker(place);
+                    });
+
+                    if (allPlaces.length > 0) {
+                        // 첫 번째 검색 결과를 기준으로 지도 중심 이동
+                        map.setCenter(new kakao.maps.LatLng(allPlaces[0].y, allPlaces[0].x));
                     }
-                    // 첫 번째 검색 결과를 기준으로 지도 중심 이동
-                    map.setCenter(new kakao.maps.LatLng(data[0].y, data[0].x));
-                } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-                    alert('검색 결과가 없습니다.');
-                } else if (status === kakao.maps.services.Status.ERROR) {
-                    alert('검색 중 오류가 발생했습니다.');
-                }
-            }, {
-                bounds: bounds // 검색할 범위를 현재 지도 범위로 제한
-            });
+                })
+                .catch(function(error) {
+                    alert(error);
+                });
         }
+	
 
         // 장소 검색 콜백 함수
         function placesSearchCB(data, status, pagination) {
