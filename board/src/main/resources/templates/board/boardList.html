@@ -309,7 +309,7 @@
             markers = [];
         }
 
-        // 장소 정보 표시 함수
+		// 장소 정보 표시 함수
         function showPlaceInfo(place) {
             var content = `
                 <h2>${place.place_name}</h2>
@@ -318,6 +318,14 @@
                 <p><strong>전화번호:</strong> ${place.phone || 'N/A'}</p>
                 <a href="${place.place_url}" target="_blank">상세 정보 보기</a>
             `;
+			// AJAX 요청을 통해 Spring Boot로 URL 전달 및 크롤링 결과 가져오기
+            fetch(`/board/scrape?url=` + encodeURIComponent(place.place_url))
+                .then(response => response.text())
+                .then(data => {
+                    // 서버에서 반환된 데이터를 HTML에 표시
+                    //document.getElementById('place-info').innerHTML = data;
+                })
+                .catch(error => console.error('Error:', error));
             document.getElementById('place-info').innerHTML = content;
         }
 

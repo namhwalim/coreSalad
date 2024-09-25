@@ -1,15 +1,19 @@
 package board.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import board.dto.BoardDto;
 import board.service.BoardService;
+import board.service.ScrapingService;
 import ch.qos.logback.core.model.Model;
 
 @Controller
@@ -17,6 +21,8 @@ public class BoardController {
 	
 	@Autowired
 	private BoardService boardService; 
+	@Autowired
+	private ScrapingService scrapingService;
 	
 	@RequestMapping("/board/openBoardList.do")
 	public ModelAndView openBoardList() throws Exception{
@@ -52,6 +58,12 @@ public class BoardController {
 		mv.addObject("board", board);
 		
 		return mv;//화면으로 보내주자
+	}
+	
+	@GetMapping("board/scrape")
+	@ResponseBody  // 뷰가 아닌 JSON 데이터를 반환
+	public Map<String, String> scrapData(@RequestParam(name = "url") String url) {
+		return scrapingService.scrapeData(url);
 	}
 	
 	
